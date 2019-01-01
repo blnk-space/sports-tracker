@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
           [now]: {
             type: 'gap',
             event: 'connected',
-            end: now,
+            time: now,
           },
         };
       }

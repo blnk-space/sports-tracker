@@ -8,6 +8,11 @@ export default styled.div`
   width: 100%;
   left: 50%!important;
   transform: translateX(-50%);
+
+  @media screen and (min-width: 800px) {
+    max-width: 640px;
+  }
+
   .content {
     position: relative;
     display: flex;
@@ -127,9 +132,5 @@ export default styled.div`
     100% {
       transform: translateX(0);
     }
-  }
-
-  @media screen and (min-width: 800px) {
-    max-width: 640px;
   }
 `;
