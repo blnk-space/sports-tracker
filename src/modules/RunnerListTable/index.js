@@ -4,10 +4,10 @@ import { FixedSizeList as List } from 'react-window';
 import { withSize } from 'react-sizeme';
 
 import { startChannel, stopChannel } from './actions';
-import { runnersSelector, eventsSelector, readerIdSelector } from './selectors';
+import { runnersSelector, eventsSelector, readerIdSelector, dirtySelector } from './selectors';
 import { getRemMultiplier } from './helpers';
 
-import Runner from './Runner';
+import Runner from './RowItem';
 import Placeholder from './Placeholder';
 import Wrapper from './styled/Wrapper';
 
@@ -20,7 +20,7 @@ class TaskList extends Component {
 
   componentDidUpdate(prevProps) {
     // logic to stop channel when window is not in view
-    if (prevProps.isVisible && !this.props.isVisible && prevProps.channelStatus === 'on') {
+    if (prevProps.isVisible && !this.props.isVisible) {
       this.props.stopChannel();
     } else if (!prevProps.isVisible && this.props.isVisible && prevProps.channelStatus !== 'on') {
       this.props.startChannel();
@@ -28,18 +28,18 @@ class TaskList extends Component {
   }
 
   render() {
-    const { runners = [], eventFeed = {}, size: { width }, baseReaderId } = this.props;
+    const { runners = [], eventFeed = {}, size: { width }, baseReaderId, dirty } = this.props;
     return (
       <Wrapper>
         <div>
-          {runners.length === 0 &&
+          {!dirty ?
           <section>
             <h3>
               Waiting for race to begin...
             </h3>
             <Placeholder />
-          </section>}
-          <ul style={{padding: 0}}>
+          </section>
+          : <ul style={{padding: 0}}>
           <List
             height={window.innerHeight * 0.85}
             itemCount ={runners.length}
@@ -51,6 +51,7 @@ class TaskList extends Component {
             {Runner}
           </List>
           </ul>
+        }
         </div>
       </Wrapper>
     );
@@ -61,6 +62,7 @@ const mapStateToProps = state => ({
   runners: runnersSelector(state),
   eventFeed: eventsSelector(state),
   baseReaderId: readerIdSelector(state),
+  dirty: dirtySelector(state),
   serverStatus: state.capturesReducer.serverStatus,
   channelStatus: state.capturesReducer.channelStatus,
 });
