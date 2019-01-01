@@ -27,13 +27,12 @@ export default (state = initialState, action) => {
     case CHANNEL_ON: {
       const now = new Date().toISOString();
       const { captures, runnerSet, channelStatus, dirty } = state;
-      const runnerStateChanges = {};
-      const capturesStateChanges = {};
+      const statesToUpdate = {};
       if (dirty && channelStatus === 'off') {
         const mutableClone = new Set(runnerSet);
         mutableClone.add(now);
-        runnerStateChanges.runnerSet = mutableClone;
-        capturesStateChanges.captures = {
+        statesToUpdate.runnerSet = mutableClone;
+        statesToUpdate.captures = {
           ...captures,
           [now]: {
             type: 'gap',
@@ -45,20 +44,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         channelStatus: 'on',
-        ...capturesStateChanges,
-        ...runnerStateChanges,
+        ...statesToUpdate,
       };
     }
     case CHANNEL_OFF: {
       const now = new Date().toISOString();
       const { captures, runnerSet, channelStatus, dirty } = state;
-      const runnerStateChanges = {};
-      const capturesStateChanges = {};
+      const statesToUpdate = {};
       if (dirty && channelStatus === 'on') {
         const mutableClone = new Set(runnerSet);
         mutableClone.add(now);
-        runnerStateChanges.runnerSet = mutableClone;
-        capturesStateChanges.captures = {
+        statesToUpdate.runnerSet = mutableClone;
+        statesToUpdate.captures = {
           ...captures,
           [now]: {
             type: 'gap',
@@ -71,8 +68,7 @@ export default (state = initialState, action) => {
         ...state,
         channelStatus: 'off',
         serverStatus: 'dormant',
-        ...capturesStateChanges,
-        ...runnerStateChanges,
+        ...statesToUpdate,
       };
     }
     case SERVER_OFF:
@@ -82,9 +78,9 @@ export default (state = initialState, action) => {
     case ADD_TASK: {
       const { captures, runnerSet, dirty } = state;
       const { payload: { athlete: { id } } } = action;
-      let dirtyFlag = dirty;
+      const statesToUpdate = {};
       if (!dirty) {
-        dirtyFlag = true;
+        statesToUpdate.dirty = true;
       }
       const mutableClone = new Set(runnerSet);
       /*
@@ -97,11 +93,12 @@ export default (state = initialState, action) => {
         mutableClone.delete(id);
       }
       mutableClone.add(id);
-      const updatedCaptures = {
+      statesToUpdate.runnerSet = mutableClone;
+      statesToUpdate.captures = {
         ...captures,
         [id]: action.payload,
       };
-      return { ...state, captures: updatedCaptures, runnerSet: mutableClone, dirty: dirtyFlag };
+      return { ...state, ...statesToUpdate };
     }
     default:
       return state;
