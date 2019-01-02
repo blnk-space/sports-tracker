@@ -8,7 +8,7 @@ import {
 } from './constants';
 
 const initialState = {
-  captures: [],
+  captures: {},
   runnerSet: new Set(),
   channelStatus: 'untouched',
   serverStatus: 'dormant',

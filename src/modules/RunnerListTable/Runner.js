@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import RunnerBox from './styled/RunnerBox';
 import Clock from './styled/Clock';
 
@@ -33,6 +35,18 @@ const Runner = ({ index, style, data }) => {
       </div>
     </RunnerBox>
   );
+};
+
+Runner.propTypes = {
+  index: PropTypes.number,
+  data: PropTypes.object,
+  style: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])),
+};
+
+Runner.defaultProps = {
+  index: '0',
+  style: {},
+  data: {},
 };
 
 export default Runner;

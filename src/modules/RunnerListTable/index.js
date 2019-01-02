@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import { withSize } from 'react-sizeme';
+import PropTypes from 'prop-types';
 
 import { startChannel, stopChannel } from './actions';
 import { runnersSelector, eventsSelector, readerIdSelector, dirtySelector } from './selectors';
 import { getRemMultiplier } from './helpers';
 
-import Runner from './RowItem';
+import RowItem from './RowItem';
 import Placeholder from './Placeholder';
 import Wrapper from './styled/Wrapper';
 
-class TaskList extends Component {
+class RunnerListTable extends Component {
   componentDidMount() {
     if (this.props.isVisible) {
       this.props.startChannel();
@@ -48,7 +49,7 @@ class TaskList extends Component {
             width={width}
             itemKey={(i, d) => d.runners[i]}
           >
-            {Runner}
+            {RowItem}
           </List>
           </ul>
         }
@@ -67,7 +68,25 @@ const mapStateToProps = state => ({
   channelStatus: state.capturesReducer.channelStatus,
 });
 
+RunnerListTable.propTypes = {
+  runners: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+  eventFeed: PropTypes.objectOf(PropTypes.object),
+  baseReaderId: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  dirty: PropTypes.bool,
+  serverStatus: PropTypes.string,
+  channelStatus: PropTypes.string,
+};
+
+RunnerListTable.defaultProps = {
+  runners: [],
+  eventFeed: [],
+  baseReaderId: false,
+  dirty: false,
+  serverStatus: 'dormant',
+  channelStatus: 'untouched',
+};
+
 export default connect(mapStateToProps, {
   startChannel,
   stopChannel,
-})(withSize()(TaskList));
+})(withSize()(RunnerListTable));

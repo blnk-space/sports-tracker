@@ -27,6 +27,11 @@ Header.propTypes = {
   channelStatus: PropTypes.string,
 };
 
+Header.defaultProps = {
+  serverStatus: 'dormant',
+  channelStatus: 'untouched',
+};
+
 const mapStateToProps = state => ({
   serverStatus: state.capturesReducer.serverStatus,
   channelStatus: state.capturesReducer.channelStatus,
