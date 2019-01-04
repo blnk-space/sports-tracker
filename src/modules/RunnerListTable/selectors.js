@@ -12,4 +12,3 @@ const runnerSet = state => state.capturesReducer.runnerSet;
 export const runnersSelector = createSelector(runnerSet, runnerOrderer);
 export const eventsSelector = state => state.capturesReducer.captures;
 export const readerIdSelector = state => state.capturesReducer.baseReaderId;
-export const dirtySelector = state => state.capturesReducer.dirty;

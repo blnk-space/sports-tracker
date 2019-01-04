@@ -5,7 +5,7 @@ import { withSize } from 'react-sizeme';
 import PropTypes from 'prop-types';
 
 import { startChannel, stopChannel } from './actions';
-import { runnersSelector, eventsSelector, readerIdSelector, dirtySelector } from './selectors';
+import { runnersSelector, eventsSelector, readerIdSelector } from './selectors';
 import { getRemMultiplier } from './helpers';
 
 import RowItem from './RowItem';
