@@ -29,11 +29,11 @@ class RunnerListTable extends Component {
   }
 
   render() {
-    const { runners = [], eventFeed = {}, size: { width }, baseReaderId, dirty } = this.props;
+    const { runners, eventFeed, size: { width }, baseReaderId } = this.props;
     return (
       <Wrapper>
         <div>
-          {!dirty ?
+          {runners.length === 0 ?
           <section>
             <h3>
               Waiting for race to begin...
@@ -63,7 +63,6 @@ const mapStateToProps = state => ({
   runners: runnersSelector(state),
   eventFeed: eventsSelector(state),
   baseReaderId: readerIdSelector(state),
-  dirty: dirtySelector(state),
   serverStatus: state.capturesReducer.serverStatus,
   channelStatus: state.capturesReducer.channelStatus,
 });
@@ -72,16 +71,14 @@ RunnerListTable.propTypes = {
   runners: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   eventFeed: PropTypes.objectOf(PropTypes.object),
   baseReaderId: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-  dirty: PropTypes.bool,
   serverStatus: PropTypes.string,
   channelStatus: PropTypes.string,
 };
 
 RunnerListTable.defaultProps = {
   runners: [],
-  eventFeed: [],
+  eventFeed: {},
   baseReaderId: false,
-  dirty: false,
   serverStatus: 'dormant',
   channelStatus: 'untouched',
 };

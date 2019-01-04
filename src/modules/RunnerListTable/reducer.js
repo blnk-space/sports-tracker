@@ -14,7 +14,6 @@ const initialState = {
   serverStatus: 'dormant',
   baseReaderId: false,
   endReaderId: false,
-  dirty: false,
 };
 
 export default (state = initialState, action) => {
@@ -26,9 +25,9 @@ export default (state = initialState, action) => {
     }
     case CHANNEL_ON: {
       const now = new Date().toISOString();
-      const { captures, runnerSet, channelStatus, dirty } = state;
+      const { captures, runnerSet, channelStatus } = state;
       const statesToUpdate = {};
-      if (dirty && channelStatus === 'off') {
+      if (runnerSet.size > 0 && channelStatus === 'off') {
         const mutableClone = new Set(runnerSet);
         mutableClone.add(now);
         statesToUpdate.runnerSet = mutableClone;
@@ -49,9 +48,9 @@ export default (state = initialState, action) => {
     }
     case CHANNEL_OFF: {
       const now = new Date().toISOString();
-      const { captures, runnerSet, channelStatus, dirty } = state;
+      const { captures, runnerSet, channelStatus } = state;
       const statesToUpdate = {};
-      if (dirty && channelStatus === 'on') {
+      if (runnerSet.size > 0 && channelStatus === 'on') {
         const mutableClone = new Set(runnerSet);
         mutableClone.add(now);
         statesToUpdate.runnerSet = mutableClone;
@@ -76,12 +75,9 @@ export default (state = initialState, action) => {
     case SERVER_ON:
       return {...state, serverStatus: 'on'};
     case ADD_TASK: {
-      const { captures, runnerSet, dirty } = state;
+      const { captures, runnerSet } = state;
       const { payload: { athlete: { id } } } = action;
       const statesToUpdate = {};
-      if (!dirty) {
-        statesToUpdate.dirty = true;
-      }
       const mutableClone = new Set(runnerSet);
       /*
         NOTE: choosing this method of using Sets to order players instead of sorting array of captured data by 'captured' key
